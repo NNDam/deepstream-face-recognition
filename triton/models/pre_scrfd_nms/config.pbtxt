@@ -1,0 +1,23 @@
+name: "pre_scrfd_nms"
+backend: "python"
+max_batch_size : 1
+
+input [
+  {
+    name: "original_image"
+    data_type: TYPE_UINT8
+    dims: [3, 1080, 1920]
+  }
+]
+output [
+  {
+    name: "resized_image"
+    data_type: TYPE_FP32
+    dims: [3, 640, 640]
+  }
+]
+
+parameters: {
+  key: "EXECUTION_ENV_PATH",
+  value: {string_value: "/deepstream/triton/envs/face_align_38.tar.gz"}
+}

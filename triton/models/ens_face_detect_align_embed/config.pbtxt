@@ -1,0 +1,146 @@
+name: "ens_face_detect_align_embed"
+platform: "ensemble"
+max_batch_size: 1
+input [
+  {
+    name: "original_image"
+    data_type: TYPE_UINT8
+    dims: [3, 1080, 1920]
+  }
+]
+output [
+  {
+    name: "res_num_detections"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "res_bboxes"
+    data_type: TYPE_FP32
+    dims: [-1, 4]
+  },
+  {
+    name: "res_scores"
+    data_type: TYPE_FP32
+    dims: [-1]
+  },
+  {
+    name: "res_landmarks"
+    data_type: TYPE_FP32
+    dims: [-1, 5, 2]
+  },
+  {
+    name: "res_face_align"
+    data_type: TYPE_FP32
+    dims: [-1, 3, 112, 112]
+  },
+  {
+    name: "res_embedding"
+    data_type: TYPE_FP32
+    dims: [-1, 512]
+  }
+]
+ensemble_scheduling {
+  step [
+    {
+      model_name: "pre_scrfd_nms"
+      model_version: -1
+      input_map {
+        key: "original_image"
+        value: "original_image"
+      }
+      output_map {
+        key: "resized_image"
+        value: "resized_image"
+      }
+    },
+    {
+      model_name: "infer_face_detection_scrfd_nms"
+      model_version: -1
+      input_map {
+        key: "input.1"
+        value: "resized_image"
+      }
+      output_map {
+        key: "num_detections"
+        value: "num_detections"
+      }
+      output_map {
+        key: "nmsed_boxes"
+        value: "nmsed_boxes"
+      }
+      output_map {
+        key: "nmsed_scores"
+        value: "nmsed_scores"
+      }
+      output_map {
+        key: "nmsed_classes"
+        value: "nmsed_classes"
+      }
+      output_map {
+        key: "nmsed_landmarks"
+        value: "nmsed_landmarks"
+      }
+    },
+    {
+      model_name: "post_scrfd_nms"
+      model_version: -1
+      input_map {
+        key: "num_detections"
+        value: "num_detections"
+      }
+      input_map {
+        key: "nmsed_boxes"
+        value: "nmsed_boxes"
+      }
+      input_map {
+        key: "nmsed_scores"
+        value: "nmsed_scores"
+      }
+      input_map {
+        key: "nmsed_classes"
+        value: "nmsed_classes"
+      }
+      input_map {
+        key: "nmsed_landmarks"
+        value: "nmsed_landmarks"
+      }
+      input_map {
+        key: "original_image"
+        value: "original_image"
+      }
+      output_map {
+        key: "res_num_detections"
+        value: "res_num_detections"
+      }
+      output_map {
+        key: "res_bboxes"
+        value: "res_bboxes"
+      }
+      output_map {
+        key: "res_scores"
+        value: "res_scores"
+      }
+      output_map {
+        key: "res_landmarks"
+        value: "res_landmarks"
+      }
+      output_map {
+        key: "res_face_align"
+        value: "res_face_align"
+      }
+    },
+    {
+      model_name: "infer_face_embedding"
+      model_version: -1
+      input_map {
+        key: "input"
+        value: "res_face_align"
+      }
+      output_map {
+        key: "output"
+        value: "res_embedding"
+      }
+    }
+  ]
+}

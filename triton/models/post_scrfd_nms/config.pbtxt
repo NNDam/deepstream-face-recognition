@@ -1,0 +1,69 @@
+name: "post_scrfd_nms"
+backend: "python"
+max_batch_size : 1
+
+input [
+  {
+    name: "num_detections"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "nmsed_boxes"
+    data_type: TYPE_FP32
+    dims: [200, 4]
+  },
+  {
+    name: "nmsed_scores"
+    data_type: TYPE_FP32
+    dims: [200]
+  },
+  {
+    name: "nmsed_classes"
+    data_type: TYPE_FP32
+    dims: [200]
+  },
+  {
+    name: "nmsed_landmarks"
+    data_type: TYPE_FP32
+    dims: [200, 10]
+  },
+  {
+    name: "original_image"
+    data_type: TYPE_UINT8
+    dims: [3, 1080, 1920]
+  }
+
+]
+output [
+  {
+    name: "res_num_detections"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "res_bboxes"
+    data_type: TYPE_FP32
+    dims: [-1, 4]
+  },
+  {
+    name: "res_scores"
+    data_type: TYPE_FP32
+    dims: [-1]
+  },
+  {
+    name: "res_landmarks"
+    data_type: TYPE_FP32
+    dims: [-1, 5, 2]
+  },
+  {
+    name: "res_face_align"
+    data_type: TYPE_FP32
+    dims: [-1, 3, 112, 112]
+  }
+]
+
+parameters: {
+  key: "EXECUTION_ENV_PATH",
+  value: {string_value: "/deepstream/triton/envs/face_align_38.tar.gz"}
+}
