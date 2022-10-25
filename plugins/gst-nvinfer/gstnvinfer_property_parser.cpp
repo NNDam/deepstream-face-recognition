@@ -364,6 +364,12 @@ gst_nvinfer_parse_other_attribute (GstNvInfer * nvinfer,
             CONFIG_GROUP_INFER_OUTPUT_TENSOR_META, &error))
       nvinfer->output_tensor_meta = TRUE;
     CHECK_ERROR (error);
+  } else if (!g_strcmp0 (key, CONFIG_GROUP_INFER_ALIGNMENTS)) {
+    nvinfer->alignments = g_key_file_get_integer (key_file,
+        group_name, CONFIG_GROUP_INFER_ALIGNMENTS,
+        &error);
+    std::cout << "Assign nvinfer->alignments as "<< std::to_string(nvinfer->alignments) << std::endl;
+    CHECK_ERROR (error);
   } else if (!g_strcmp0 (key, CONFIG_GROUP_INFER_OUTPUT_INSTANCE_MASK)) {
     if (g_key_file_get_boolean (key_file, group_name,
             CONFIG_GROUP_INFER_OUTPUT_INSTANCE_MASK, &error))

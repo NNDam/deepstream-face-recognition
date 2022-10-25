@@ -148,6 +148,9 @@
 #define CONFIG_GROUP_INFER_CLASS_ATTRS_NMS_IOU_THRESHOLD "nms-iou-threshold"
 #define CONFIG_GROUP_INFER_CLASS_ATTRS_TOP_K "topk"
 
+/** Customize parameters. */
+#define CONFIG_GROUP_INFER_ALIGNMENTS "alignments"
+
 gboolean gst_nvinfer_parse_config_file (GstNvInfer *nvinfer,
         NvDsInferContextInitParams *init_params, const gchar * cfg_file_path);
 

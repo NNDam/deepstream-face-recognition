@@ -24,10 +24,12 @@
 #include "nvbufsurftransform.h"
 #include <nvdsinfer_context.h>
 
-#include "gstnvdsinfer.h"
+// #include "gstnvdsinfer.h"
 
-#include "gstnvdsmeta.h"
+// #include "gstnvdsmeta.h"
+#include "align_functions.h"
 
+#include "extractor.h"
 #include "nvtx3/nvToolsExt.h"
 
 /* Package and library details required for plugin_init */
@@ -76,6 +78,7 @@ enum
   PROP_OUTPUT_TENSOR_META,
   PROP_OUTPUT_INSTANCE_MASK,
   PROP_INPUT_TENSOR_META,
+  PROP_ALIGNMENTS,
   PROP_LAST
 };
 
@@ -312,6 +315,12 @@ struct _GstNvInfer
   /** Boolean indicating if tensor outputs should be attached as meta on
    * GstBuffers. */
   gboolean output_tensor_meta;
+
+  /** Boolean indicating if using face alignment
+   * GstBuffers. */
+  gboolean alignments;
+  align_namespace::Aligner aligner;
+  extractor_namespace::Extractor extractor;
 
   /** Boolean indicating if instance masks are expected in output and
    *  has to be attached in metadata */

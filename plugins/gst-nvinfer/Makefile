@@ -15,7 +15,7 @@ endif
 
 CXX:= g++
 SRCS:= gstnvinfer.cpp  gstnvinfer_allocator.cpp gstnvinfer_property_parser.cpp \
-       gstnvinfer_meta_utils.cpp gstnvinfer_impl.cpp gstnvinfer_yaml_parser.cpp
+       gstnvinfer_meta_utils.cpp gstnvinfer_impl.cpp gstnvinfer_yaml_parser.cpp align_functions.cpp extractor.cpp
 INCS:= $(wildcard *.h)
 LIB:=libnvdsgst_infer.so
 
@@ -23,15 +23,18 @@ NVDS_VERSION:=6.1
 
 CFLAGS+= -fPIC -std=c++11 -DDS_VERSION=\"6.1.0\" \
 	 -I /usr/local/cuda-$(CUDA_VER)/include \
-	 -I ../../includes \
-	 -I ../gst-nvdspreprocess/include \
-	 -I ../../libs/nvdsinfer -DNDEBUG
+	 -I /usr/local/cuda/include \
+	 -I /opt/nvidia/deepstream/deepstream/sources/includes \
+	 -I /opt/nvidia/deepstream/deepstream/sources/gst-plugins/gst-nvdspreprocess/include \
+	 -I /opt/nvidia/deepstream/deepstream/sources/libs/nvdsinfer -DNDEBUG
+
+CFLAGS+=-I /usr/include/opencv4 
 
 GST_INSTALL_DIR?=/opt/nvidia/deepstream/deepstream-$(NVDS_VERSION)/lib/gst-plugins/
 LIB_INSTALL_DIR?=/opt/nvidia/deepstream/deepstream-$(NVDS_VERSION)/lib/
 
 LIBS := -shared -Wl,-no-undefined \
-	-L/usr/local/cuda-$(CUDA_VER)/lib64/ -lcudart
+	-L/usr/local/cuda-$(CUDA_VER)/lib64/ -L/usr/local/cuda/lib64/ -lcudart
 
 LIBS+= -L$(LIB_INSTALL_DIR) -lnvdsgst_helper -lnvdsgst_meta -lnvds_meta \
        -lnvds_infer -lnvbufsurface -lnvbufsurftransform -ldl -lpthread -lyaml-cpp \
@@ -39,7 +42,7 @@ LIBS+= -L$(LIB_INSTALL_DIR) -lnvdsgst_helper -lnvdsgst_meta -lnvds_meta \
 
 OBJS:= $(SRCS:.cpp=.o)
 
-PKGS:= gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0
+PKGS:= gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0 /usr/lib/x86_64-linux-gnu/pkgconfig/opencv4.pc
 CFLAGS+=$(shell pkg-config --cflags $(PKGS))
 LIBS+=$(shell pkg-config --libs $(PKGS))
 
