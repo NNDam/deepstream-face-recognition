@@ -111,7 +111,7 @@ __launch_bounds__(nthds_per_cta)
             nmsedClasses[i] = (index % (numClasses * numPredsPerClass)) / numPredsPerClass; // label
             nmsedScores[i] = score;                                                        // confidence score
             nmsedScores[i] = minus_fb(nmsedScores[i], scoreShift);
-            const int lankmarkId = (index % numPredsPerClass)*10;
+            const int lankmarkId = (index % numPredsPerClass + bboxOffset)*10;
 
             nmsedLandmarks[i * 10]     = (T_BBOX) landData[lankmarkId];
             nmsedLandmarks[i * 10 + 1] = (T_BBOX) landData[lankmarkId + 1];
