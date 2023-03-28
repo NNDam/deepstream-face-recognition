@@ -39,6 +39,6 @@ LD_PRELOAD=<path-to-NMS-plugin> python main_ff.py file:<path-to-video-input>
 
 ## 4. To do
 - [x] Add cropped/fullframe pipeline for face
-- [ ] Fix 1-batchsize error (we have some bugs with custom NMS plugin, only have true output with batchsize=1)
-- [ ] Improve pipelines robustness 
+- [x] Fix 1-batchsize error (we have some bugs with custom NMS plugin, only have true output with batchsize=1)
+- [ ] Add GPU face alignment
 - [ ] Add cropped pipeline for license plate
